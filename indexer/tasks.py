@@ -5,11 +5,9 @@ from indexer.visual import VisualDescriptor
 from indexer.celery_init import celery_app
 from indexer.logger import log
 from indexer import stats
-from indexer.preprocessing import VideoStream
 from celery.contrib import rdb
 
 vd = VisualDescriptor()
-vid = VideoStream(vd)
 
 @celery_app.task(bind=True, soft_time_limit=1000)
 def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
@@ -55,13 +53,13 @@ def nsfw_analytics_gif_worker(self, gif_url):
             start = time.time()
             if type(gif_url) is str or type(gif_url) is unicode:
                 # get duration of gif url
-                duration = vid.get_video_duration(gif_url)
+                duration = vd.get_video_duration(gif_url)
                 if duration > 60:
                     results['status_code'] = 4009
                     return results
 
                 # only extracting visual content
-                results = vid.index_frames_from_url(gif_url, 1000)
+                results = vd.index_frames_from_url(gif_url, 1000)
                 log.info("body message being indexed in all_videos: " + str())
 
                 average_result = defaultdict(float)

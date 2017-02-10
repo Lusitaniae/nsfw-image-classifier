@@ -38,6 +38,17 @@ class VisualDescriptor():
         self.caffe_transformer.set_raw_scale('data', 255)  # rescale from [0, 1] to [0, 255]
         self.caffe_transformer.set_channel_swap('data', (2, 1, 0))  # swap channels from RGB to BGR
 
+    def get_video_duration(self, stream_url):
+        """
+        Get information about video from stream url
+
+        :param stream_url: url where the stream is located
+        :return: Duration of the video
+        """
+        # Extract video information from stream url.
+        video_reader = imageio.get_reader(stream_url)
+        video_info = video_reader.get_meta_data()
+        video_duration = float(video_info['duration'])
 
     def resize_image(self, data, sz=(256, 256)):
         """
