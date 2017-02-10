@@ -25,9 +25,9 @@ class VisualDescriptor():
     """
 
     def __init__(self, debug=False):
-        pycaffe_dir = os.path.dirname(os.path.realpath('__file__'))
-        self.model_def = os.path.join(self.pycaffe_dir, 'nsfw_model/deploy.prototxt')
-        self.pretrained_model = os.path.join(self.pycaffe_dir, 'nsfw_model/resnet_50_1by2_nsfw.caffemodel')
+        pycaffe_dir = os.path.dirname(__file__)
+        self.model_def = os.path.join(pycaffe_dir, 'nsfw_model/deploy.prototxt')
+        self.pretrained_model = os.path.join(pycaffe_dir, 'nsfw_model/resnet_50_1by2_nsfw.caffemodel')
         # Pre-load caffe model.
         import pdb; pdb.set_trace()
         self.nsfw_net = caffe.Net(self.model_def,  # pylint: disable=invalid-name
