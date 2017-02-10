@@ -15,8 +15,8 @@ setup(
         'test': ['coverage'],
     },
     package_data={
-        'classifier_nsfw': ['config.yaml'],
-        'classifier_nsfw.indexer.nsfw_model': ['*.prototxt', '*.caffemodel'],
+        'indexer': ['config.yaml'],
+        'indexer.nsfw_model': ['*.prototxt', '*.caffemodel'],
     },
 )
 
