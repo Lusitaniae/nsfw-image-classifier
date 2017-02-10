@@ -11,7 +11,7 @@ import time
 from PIL import Image
 from StringIO import StringIO
 import caffe
-import urllib2 as urllib, URLError
+import urllib2 as urllib
 import io
 import imageio
 import math
@@ -110,7 +110,7 @@ class VisualDescriptor():
             fd = urllib.urlopen(url)
             image_file = io.BytesIO(fd.read())
             image = Image.open(image_file)
-        except URLError:
+        except urllib.URLError:
             # Timed out.
             raise IOError("urllib timed out.")
         return image
