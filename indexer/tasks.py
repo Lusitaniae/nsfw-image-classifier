@@ -81,7 +81,7 @@ def nsfw_analytics_gif_worker(self, gif_url):
                 max_result['nsfw'] *= 0.98
                 max_result['sfw'] = 1 - max_result['nsfw']
 
-                response['response'] = average_result
+                response['response'] = max_result
                 response['status_code'] = 2000
             dt = int((time.time() - start) * 1000)
             stats.timing('nsfw-gif-analytics', dt)
