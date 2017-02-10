@@ -19,3 +19,8 @@ if 'SERVER_TYPE' in os.environ:
 else:
     if 'dev' in CONF.keys():
         CONF = CONF['dev']
+
+
+stats = statsd.StatsClient(CONF['statsd']['host'], CONF['statsd']['port'],
+                           prefix=CONF['statsd']['prefix'])
+
