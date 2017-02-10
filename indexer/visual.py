@@ -50,6 +50,8 @@ class VisualDescriptor():
         video_info = video_reader.get_meta_data()
         video_duration = float(video_info['duration'])
 
+        return video_duration
+
     def resize_image(self, data, sz=(256, 256)):
         """
         Resize image. Please use this resize logic for best results instead of the
