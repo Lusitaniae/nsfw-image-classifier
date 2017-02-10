@@ -29,7 +29,6 @@ class VisualDescriptor():
         self.model_def = os.path.join(pycaffe_dir, 'nsfw_model/deploy.prototxt')
         self.pretrained_model = os.path.join(pycaffe_dir, 'nsfw_model/resnet_50_1by2_nsfw.caffemodel')
         # Pre-load caffe model.
-        import pdb; pdb.set_trace()
         self.nsfw_net = caffe.Net(self.model_def,  # pylint: disable=invalid-name
                                   self.pretrained_model, caffe.TEST)
         # Load transformer
