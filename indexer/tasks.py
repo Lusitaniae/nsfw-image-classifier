@@ -12,42 +12,33 @@ vd = VisualDescriptor()
 vid = VideoStream(vd)
 
 @celery_app.task(bind=True, soft_time_limit=1000)
-def analytics_image_worker(self, image_url, thumbnail_url):
+def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
     results = dict()
     results['image_url'] = image_url
     if image_url:
         try:
             start = time.time()
             if type(image_url) is str or type(image_url) is unicode:
-                image = vd.url2img(thumbnail_url)
-
-                # tags extracted from our own models
-                vd_words, vd_probs = vd.get_tags_frames([image])
-                vd_words, vd_probs = vd_words[0], vd_probs[0]
-
-                dt = int((time.time() - start) * 1000)
-                stats.timing('image-analytics', dt)
-
-                results['visual_words'] = vd_words
-                results['visual_probs'] = vd_probs
+                image_data = vd.url2image(thumbnail_url)
+                result = vd.get_tag_image(image_data)
+                results['response'] = result
                 results['status_code'] = 2000
             elif type(image_url) is list:
                 if len(image_url) <= 10:
-                    list_vd_words, list_vd_probs = [], []
+                    list_results = []
                     for index, url in enumerate(image_url):
-                        image = vd.url2img(thumbnail_url[index])
-                        vd_words, vd_probs = vd.get_tags_frames([image])
-                        vd_words, vd_probs = vd_words[0], vd_probs[0]
-                        list_vd_words.append(vd_words)
-                        list_vd_probs.append(vd_probs)
+                        image_data = vd.url2image(thumbnail_url[index])
+                        result = vd.get_tag_image(image_data)
+                        list_results.append(result)
 
-                    results['visual_words'] = list_vd_words
-                    results['visual_probs'] = list_vd_probs
+                    results['response'] = list_results
                     results['status_code'] = 2000
                 else:
                     log.info("Exceeded the limit for number of images")
                     results['status_code'] = 4001
                     return results
+            dt = int((time.time() - start) * 1000)
+            stats.timing('nsfw-gif-analytics', dt)
         except Exception as e:
             log.error("URL is not a valid url! " + str(image_url))
             log.info("Malformed url. Acknowledging the message...Error due to" + str(e))
@@ -56,7 +47,7 @@ def analytics_image_worker(self, image_url, thumbnail_url):
 
 
 @celery_app.task(bind=True, soft_time_limit=1000)
-def analytics_gif_worker(self, gif_url):
+def nsfw_analytics_gif_worker(self, gif_url):
     results = dict()
     results['gif_url'] = gif_url
     if gif_url:
@@ -70,32 +61,21 @@ def analytics_gif_worker(self, gif_url):
                     return results
 
                 # only extracting visual content
-                vd_words, vd_probs, timestamp_vision = vid.index_frames_from_url(gif_url, 1000)
-
+                results = vid.index_frames_from_url(gif_url, 1000)
                 log.info("body message being indexed in all_videos: " + str())
 
-                vd_words_probs = defaultdict(float)
-                vd_words_count = defaultdict(float)
-                all_vd_words = set()
-                for index_frame, vd_word in enumerate(vd_words):
-                    all_vd_words = all_vd_words.union(set(vd_word))
-                    for index_word, word in enumerate(vd_word):
-                        vd_words_probs[word] += vd_probs[index_frame][index_word]
-                        vd_words_count[word] += 1
+                average_result = defaultdict(float)
+                max_result = defaultdict(float)
+                count = len(results)
+                for result in results:
+                    for key in result.keys:
+                        average_result[key] = ((count - 1) * average_result[key] + result[key])/count
+                        max_result[key] = max(max_result[key], result[key])
 
-                all_vd_words = list(all_vd_words)
-                vd_probs_avg = []
-                for word in all_vd_words:
-                    vd_probs_avg.append(float(vd_words_probs[word]/vd_words_count[word]))
-
-                probs_words = zip(vd_probs_avg, all_vd_words)
-                probs_words.sort(reverse=True)
-                results['visual_words'] = [words for probs, words in probs_words]
-                results['visual_probs'] = [probs for probs, words in probs_words]
+                results['response'] = average_result
                 results['status_code'] = 2000
-
-                dt = int((time.time() - start) * 1000)
-                stats.timing('gif-analytics', dt)
+            dt = int((time.time() - start) * 1000)
+            stats.timing('nsfw-gif-analytics', dt)
 
         except Exception as e:
             results['status_code'] = 4004

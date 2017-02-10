@@ -13,7 +13,10 @@ from StringIO import StringIO
 import caffe
 import urllib2 as urllib, URLError
 import io
-
+import imageio
+import math
+from indexer.logger import log
+imageio.plugins.ffmpeg.download()
 
 class VisualDescriptor():
     """
@@ -112,7 +115,7 @@ class VisualDescriptor():
             raise IOError("urllib timed out.")
         return image
 
-    def get_tag_url(self, image_url):
+    def get_tag_image(self, image_data):
         """
         Extract image descriptors
         :param image_data: PIL.Image pimg:
@@ -122,7 +125,6 @@ class VisualDescriptor():
         print("Predicting results for list of images...")
         result = dict()
         try:
-            image_data = self.url2image(image_url)
             # Make the actual forward pass and get predictions
             scores = self.caffe_preprocess_and_compute(image_data, caffe_transformer=self.caffe_transformer,
                                                        caffe_net=self.nsfw_net,
@@ -136,3 +138,41 @@ class VisualDescriptor():
             print("There was an error in prediction with error" + str(e))
 
         return result
+
+    def index_frames_from_url(self, video_url, delay, is_extracted=False):
+        if not is_extracted:
+            # Extract the frames from the video and sort them for access
+            results = self.index_images_from_stream(video_url, delay)
+            return results
+        else:
+            return None
+
+    def index_images_from_stream(self, stream_url, delay):
+            """
+            Sample images from a live stream at regular intervals.
+
+            :param stream_url: url where the stream is located
+            :param delay: millisecond delay between sampled images
+            :return: image_batch - NxCxHxW - (num images)x(dims of image) converted w/ image_to_caffe_format
+            """
+            # Save images into temporary directory specific to this stream.
+            fps = float(1000)/delay
+            log.info("Reading from video stream and saving it as numpy array...")
+            video_reader = imageio.get_reader(stream_url)
+            video_info = video_reader.get_meta_data()
+            video_fps = int(math.floor(video_info['fps']))
+            video_duration = int(math.floor(video_info['duration']))
+            if video_duration < 1.00:
+                fps = float(250)/delay
+            results = []
+            try:
+                for ind, frame in enumerate(video_reader):
+                    if ind % (video_fps/fps) == 0:
+                        image_data = Image.fromarray(np.uint8(frame))
+                        result = self.get_tag_image(image_data)
+                        results.append(result)
+            except Exception as e:
+                log.error(e)
+                log.exception("There was an error reading a frame. Other frames available in sampled_frames.")
+
+            return results
