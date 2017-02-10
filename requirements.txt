@@ -1,0 +1,16 @@
+requests
+pbr
+Pillow
+validators
+pyStemmer
+pika
+imageio==2.1.1
+python-dateutil
+elasticsearch
+requests_aws4auth
+python-rake
+ffprobe
+statsd
+scikit-learn==0.18.1
+kombu==4.0.0
+Celery==4.0.0
