@@ -10,6 +10,7 @@ import os
 import time
 from PIL import Image
 from StringIO import StringIO
+import cStringIO
 import caffe
 import urllib2 as urllib
 import io
@@ -74,7 +75,6 @@ class VisualDescriptor():
         fh_im.seek(0)
         return bytearray(fh_im.read())
 
-
     def caffe_preprocess_and_compute(self, pimg, caffe_transformer=None, caffe_net=None,
                                      output_layers=None):
         """
@@ -122,9 +122,14 @@ class VisualDescriptor():
         Retrieves image as PIL.Image from url.
         """
         try:
-            fd = urllib.urlopen(url)
-            image_file = io.BytesIO(fd.read())
-            image = Image.open(image_file)
+            file = cStringIO.StringIO(urllib.urlopen(url).read())
+            image_data = Image.open(file)
+            if image_data.mode != "RGB":
+                image_data = image_data.convert('RGB')
+            fh_im = StringIO()
+            image_data.save(fh_im, format='JPEG')
+            fh_im.seek(0)
+            image = bytearray(fh_im.read())
         except urllib.URLError:
             # Timed out.
             raise IOError("urllib timed out.")

@@ -64,10 +64,11 @@ def nsfw_analytics_gif_worker(self, gif_url):
 
                 average_result = defaultdict(float)
                 max_result = defaultdict(float)
-                count = len(results)
+                n = 0
                 for result in results:
+                    n += 1
                     for key in result.keys():
-                        average_result[key] = ((count - 1) * average_result[key] + result[key])/count
+                        average_result[key] = ((n - 1) * average_result[key] + result[key])/n
                         max_result[key] = max(max_result[key], result[key])
 
                 response['response'] = average_result
