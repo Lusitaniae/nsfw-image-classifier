@@ -2,7 +2,7 @@
 import setuptools
 from setuptools import setup
 setup(
-    name='classifier_nsfw',
+    name='classifier-nsfw',
     version='0.1',
     author='Shabaz Patel',
     author_email='shabaz@acusense.ai',

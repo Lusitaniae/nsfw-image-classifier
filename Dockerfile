@@ -11,8 +11,8 @@ RUN echo "password $GIT_PASSWORD" >> ~/.netrc
 RUN git config --global user.name "Dev Acusense"
 RUN git config --global user.email dev@acusense.ai
 
-RUN git clone https://github.com/Acusense/classifier_nsfw.git
-WORKDIR /classifier_nsfw
+RUN git clone https://github.com/Acusense/classifier-nsfw.git
+WORKDIR /classifier-nsfw
 RUN pip install -r requirements.txt
 
 ARG GIT_COMMIT
