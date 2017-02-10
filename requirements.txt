@@ -2,13 +2,11 @@ requests
 pbr
 Pillow
 validators
-pyStemmer
 pika
 imageio==2.1.1
 python-dateutil
 elasticsearch
 requests_aws4auth
-python-rake
 ffprobe
 statsd
 pytest==3.0.6

@@ -20,7 +20,7 @@ def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
                 image_data = vd.url2image(thumbnail_url)
                 result = vd.get_tag_image(image_data)
                 # need to remove
-                result['nsfw']*=0.985
+                result['nsfw'] *= 0.98
                 result['sfw'] = 1 - result['nsfw']
                 results['response'] = result
                 results['status_code'] = 2000
@@ -31,7 +31,7 @@ def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
                         image_data = vd.url2image(thumbnail_url[index])
                         result = vd.get_tag_image(image_data)
                         # need to remove
-                        result['nsfw'] *= 0.985
+                        result['nsfw'] *= 0.98
                         result['sfw'] = 1 - result['nsfw']
                         list_results.append(result)
 
@@ -78,8 +78,8 @@ def nsfw_analytics_gif_worker(self, gif_url):
                         max_result[key] = max(max_result[key], result[key])
 
                 # need to remove
-                average_result['nsfw'] *= 0.985
-                average_result['sfw'] = 1 - average_result['nsfw']
+                max_result['nsfw'] *= 0.98
+                max_result['sfw'] = 1 - max_result['nsfw']
 
                 response['response'] = average_result
                 response['status_code'] = 2000
