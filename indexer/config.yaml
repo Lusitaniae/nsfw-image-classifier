@@ -2,7 +2,7 @@ production:
   statsd:
       port: 8125
       host: "10.0.2.142"
-      prefix: "production.analytics.worker"
+      prefix: "production.nsfw_analytics.worker"
   redis_options:
       redis_host: 'redis://production.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
 
@@ -10,7 +10,7 @@ staging:
   statsd:
       port: 8125
       host: "172.31.13.236"
-      prefix: "staging.analytics.worker"
+      prefix: "staging.nsfw_analytics.worker"
   redis_options:
       redis_host: 'redis://staging.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
 
@@ -19,7 +19,7 @@ dev-tunnel:
   statsd:
       port: 8125
       host: "172.31.13.236"
-      prefix: "dev-tunnel.analytics.worker"
+      prefix: "dev-tunnel.nsfw_analytics.worker"
   redis_options:
       redis_host: 'redis://staging.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
 
@@ -28,6 +28,6 @@ dev:
   statsd:
       port: 8125
       host: "172.31.13.236"
-      prefix: "dev.analytics.worker"
+      prefix: "dev.nsfw_analytics.worker"
   redis_options:
       redis_host: 'redis://staging.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
