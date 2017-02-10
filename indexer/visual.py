@@ -75,6 +75,7 @@ class VisualDescriptor():
         fh_im.seek(0)
         return bytearray(fh_im.read())
 
+
     def caffe_preprocess_and_compute(self, pimg, caffe_transformer=None, caffe_net=None,
                                      output_layers=None):
         """
@@ -184,6 +185,12 @@ class VisualDescriptor():
                 for ind, frame in enumerate(video_reader):
                     if ind % (video_fps/fps) == 0:
                         image_data = Image.fromarray(np.uint8(frame))
+                        if image_data.mode != "RGB":
+                            image_data = image_data.convert('RGB')
+                        fh_im = StringIO()
+                        image_data.save(fh_im, format='JPEG')
+                        fh_im.seek(0)
+                        image_data = bytearray(fh_im.read())
                         result = self.get_tag_image(image_data)
                         results.append(result)
             except Exception as e:
