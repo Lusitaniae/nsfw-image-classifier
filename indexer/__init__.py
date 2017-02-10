@@ -2,8 +2,6 @@ import os
 import yaml
 import statsd
 
-from indexer.config import *
-
 path = os.path.dirname(os.path.realpath('__file__'))
 path = os.path.join(path, 'indexer/config.yaml')
 
