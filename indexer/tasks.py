@@ -10,7 +10,7 @@ from celery.contrib import rdb
 vd = VisualDescriptor()
 
 @celery_app.task(bind=True, soft_time_limit=1000)
-def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
+def analytics_nsfw_image_worker(self, image_url, thumbnail_url):
     results = dict()
     results['image_url'] = image_url
     if image_url:
@@ -51,7 +51,7 @@ def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
 
 
 @celery_app.task(bind=True, soft_time_limit=1000)
-def nsfw_analytics_gif_worker(self, gif_url):
+def analytics_nsfw_gif_worker(self, gif_url):
     response = dict()
     response['gif_url'] = gif_url
     if gif_url:
