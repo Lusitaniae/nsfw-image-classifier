@@ -46,8 +46,8 @@ def nsfw_analytics_image_worker(self, image_url, thumbnail_url):
 
 @celery_app.task(bind=True, soft_time_limit=1000)
 def nsfw_analytics_gif_worker(self, gif_url):
-    results = dict()
-    results['gif_url'] = gif_url
+    response = dict()
+    response['gif_url'] = gif_url
     if gif_url:
         try:
             start = time.time()
@@ -55,8 +55,8 @@ def nsfw_analytics_gif_worker(self, gif_url):
                 # get duration of gif url
                 duration = vd.get_video_duration(gif_url)
                 if duration > 60:
-                    results['status_code'] = 4009
-                    return results
+                    response['status_code'] = 4009
+                    return response
 
                 # only extracting visual content
                 results = vd.index_frames_from_url(gif_url, 1000)
@@ -66,18 +66,18 @@ def nsfw_analytics_gif_worker(self, gif_url):
                 max_result = defaultdict(float)
                 count = len(results)
                 for result in results:
-                    for key in result.keys:
+                    for key in result.keys():
                         average_result[key] = ((count - 1) * average_result[key] + result[key])/count
                         max_result[key] = max(max_result[key], result[key])
 
-                results['response'] = average_result
-                results['status_code'] = 2000
+                response['response'] = average_result
+                response['status_code'] = 2000
             dt = int((time.time() - start) * 1000)
             stats.timing('nsfw-gif-analytics', dt)
 
         except Exception as e:
-            results['status_code'] = 4004
+            response['status_code'] = 4004
             log.error("URL is not a valid url! " + str(gif_url))
             log.info("Malformed url. Acknowledging the message...Error due to" + str(e))
 
-    return results
+    return response
