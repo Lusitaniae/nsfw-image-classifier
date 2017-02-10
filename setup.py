@@ -16,7 +16,7 @@ setup(
     },
     package_data={
         'classifier_nsfw': ['config.yaml'],
-        'classifier_nsfw.nsfw_model': ['*.prototxt', '*.caffemodel'],
+        'classifier_nsfw.indexer.nsfw_model': ['*.prototxt', '*.caffemodel'],
     },
 )
 
