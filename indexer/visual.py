@@ -152,7 +152,8 @@ class VisualDescriptor():
             try:
                 for ind, frame in enumerate(video_reader):
                     if ind % (video_fps/fps) == 0:
-                        result = self.get_tag_image(frame)
+                        image = cv2.cvtColor(np.array(frame), cv2.IMREAD_COLOR)
+                        result = self.get_tag_image(image)
                         results.append(result)
             except Exception as e:
                 log.error(e)
