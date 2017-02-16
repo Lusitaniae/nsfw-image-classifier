@@ -92,7 +92,7 @@ class VisualDescriptor():
         img = self.transform_img(pimg)
         self.nsfw_net.blobs['data'].data[...] = self.caffe_transformer.preprocess('data', img)
         out = self.nsfw_net.forward()
-        outputs = out['prob']
+        outputs = out['prob'][0]
         return outputs
 
     def url2image(self, url):
