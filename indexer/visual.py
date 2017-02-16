@@ -131,7 +131,7 @@ class VisualDescriptor():
 
         return result
 
-    def index_images_from_url(self, video_url, delay):
+    def index_frames_from_url(self, video_url, delay):
             """
             Sample images from a live stream at regular intervals.
 
@@ -152,8 +152,7 @@ class VisualDescriptor():
             try:
                 for ind, frame in enumerate(video_reader):
                     if ind % (video_fps/fps) == 0:
-                        image_data = cv2.imdecode(frame, cv2.IMREAD_COLOR)
-                        result = self.get_tag_image(image_data)
+                        result = self.get_tag_image(frame)
                         results.append(result)
             except Exception as e:
                 log.error(e)
