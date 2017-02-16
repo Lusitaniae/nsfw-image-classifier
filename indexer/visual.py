@@ -26,6 +26,7 @@ class VisualDescriptor():
         pycaffe_dir = os.path.dirname(__file__)
         self.model_def = os.path.join(pycaffe_dir, 'nsfw_model/alexnet.prototxt')
         self.pretrained_model = os.path.join(pycaffe_dir, 'nsfw_model/alexnet.caffemodel')
+        self.mean_path = os.path.join(pycaffe_dir, 'nsfw_model/mean.binaryproto')
         # Pre-load caffe model.
         self.nsfw_net = caffe.Net(self.model_def,  # pylint: disable=invalid-name
                                   self.pretrained_model, caffe.TEST)
@@ -33,9 +34,11 @@ class VisualDescriptor():
         '''
         Reading mean image, caffe model and its weights
         '''
+        self.image_width = 227
+        self.image_height = 227
         # Read mean image
         self.mean_blob = caffe_pb2.BlobProto()
-        with open('nsfw_model/mean.binaryproto') as f:
+        with open(self.mean_path) as f:
             self.mean_blob.ParseFromString(f.read())
         self.mean_array = np.asarray(self.mean_blob.data, dtype=np.float32).reshape(
             (self.mean_blob.channels, self.mean_blob.height, self.mean_blob.width))
@@ -44,8 +47,7 @@ class VisualDescriptor():
         self.caffe_transformer = caffe.io.Transformer({'data': self.nsfw_net.blobs['data'].data.shape})
         self.caffe_transformer.set_mean('data', self.mean_array)
         self.caffe_transformer.set_transpose('data', (2, 0, 1))
-        self.image_width = 227
-        self.image_height = 227
+
 
     def get_video_duration(self, stream_url):
         """
