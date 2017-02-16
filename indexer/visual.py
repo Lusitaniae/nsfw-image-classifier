@@ -7,13 +7,8 @@ Please see LICENSE file in the project root for terms.
 
 import numpy as np
 import os
-import time
-from PIL import Image
-from StringIO import StringIO
-import cStringIO
 import caffe
 import urllib2 as urllib
-import io
 import imageio
 import math
 import cv2
