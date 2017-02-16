@@ -16,7 +16,7 @@ setup(
     },
     package_data={
         'indexer': ['config.yaml'],
-        'indexer.nsfw_model': ['*.prototxt', '*.caffemodel'],
+        'indexer.nsfw_model': ['*.prototxt', '*.caffemodel', '*.binaryproto'],
     },
 )
 
