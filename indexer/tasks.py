@@ -19,9 +19,6 @@ def analytics_nsfw_image_worker(self, image_url, thumbnail_url):
             if type(image_url) is str or type(image_url) is unicode:
                 image_data = vd.url2image(thumbnail_url)
                 result = vd.get_tag_image(image_data)
-                # need to remove
-                result['nsfw'] *= 0.98
-                result['sfw'] = 1 - result['nsfw']
                 results['response'] = result
                 results['status_code'] = 2000
             elif type(image_url) is list:
@@ -30,11 +27,7 @@ def analytics_nsfw_image_worker(self, image_url, thumbnail_url):
                     for index, url in enumerate(image_url):
                         image_data = vd.url2image(thumbnail_url[index])
                         result = vd.get_tag_image(image_data)
-                        # need to remove
-                        result['nsfw'] *= 0.98
-                        result['sfw'] = 1 - result['nsfw']
                         list_results.append(result)
-
                     results['response'] = list_results
                     results['status_code'] = 2000
                 else:
@@ -76,11 +69,8 @@ def analytics_nsfw_gif_worker(self, gif_url):
                     for key in result.keys():
                         average_result[key] = ((n - 1) * average_result[key] + result[key])/n
                         max_result[key] = max(max_result[key], result[key])
-
-                # need to remove
-                max_result['nsfw'] *= 0.98
+                 
                 max_result['sfw'] = 1 - max_result['nsfw']
-
                 response['response'] = max_result
                 response['status_code'] = 2000
             dt = int((time.time() - start) * 1000)
