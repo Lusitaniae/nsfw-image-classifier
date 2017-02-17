@@ -48,7 +48,7 @@ class VisualDescriptor():
         :return: Duration of the video
         """
         # Extract video information from stream url.
-        video_reader = imageio.get_reader(stream_url)
+        video_reader = imageio.get_reader(stream_url, format='mp4')
         video_info = video_reader.get_meta_data()
         video_duration = float(video_info['duration'])
 
