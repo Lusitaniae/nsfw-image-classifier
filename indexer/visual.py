@@ -208,4 +208,5 @@ class VisualDescriptor():
                 log.exception("There was an error reading a frame. Other frames available in sampled_frames.")
             finally:
                 video_reader.close()
+                video_reader.request.finish()
             return results
