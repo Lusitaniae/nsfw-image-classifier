@@ -124,8 +124,8 @@ class VisualDescriptor():
             scores = self.caffe_preprocess_and_compute(image_data)
             # Scores is the array containing SFW / NSFW image probabilities
             # scores[1] indicates the NSFW probability
-            result['nsfw'] = scores[1]
-            result['sfw'] = scores[0]
+            result['nsfw'] = float(scores[1])
+            result['sfw'] = float(scores[0])
         except Exception as e:
             print("There was an error in prediction with error" + str(e))
 
