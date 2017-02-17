@@ -13,6 +13,11 @@ RUN git config --global user.email dev@acusense.ai
 
 RUN git clone https://github.com/Acusense/classifier-nsfw.git
 WORKDIR /workspace/classifier-nsfw
+
+ARG BRANCH=stable
+RUN git pull
+
+RUN git checkout $BRANCH
 RUN pip install -r requirements.txt
 
 ARG GIT_COMMIT
