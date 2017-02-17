@@ -176,18 +176,24 @@ class VisualDescriptor():
             :return: image_batch - NxCxHxW - (num images)x(dims of image) converted w/ image_to_caffe_format
             """
             # Save images into temporary directory specific to this stream.
-            fps = float(1000)/delay
-            log.info("Reading from video stream and saving it as numpy array...")
-            video_reader = imageio.get_reader(stream_url)
-            video_info = video_reader.get_meta_data()
-            video_fps = int(math.floor(video_info['fps']))
-            video_duration = int(math.floor(video_info['duration']))
-            if video_duration < 1.00:
-                fps = float(250)/delay
             results = []
+            log.info("Reading from video stream and saving it as numpy array...")
+            video_reader = imageio.get_reader(stream_url, format='mp4')
+            video_info = video_reader.get_meta_data()
+
+            log.info("Calculate the times and frames to sample.")
+            delta = float(video_info['duration']) / video_info['nframes']
+            frame_times = []
+            seek_time = float(0)
+            while seek_time < video_info['duration']:
+                frame_times.append(seek_time)
+                seek_time += (float(delay)/1000)
+            frame_indices = [int(math.floor(float(frame_time) / delta)) for frame_time in frame_times]
+
+            log.info("Extracting tags and frames one by one reading through imageio video_reader")
             try:
                 for ind, frame in enumerate(video_reader):
-                    if ind % (video_fps/fps) == 0:
+                    if ind in frame_indices:
                         image_data = Image.fromarray(np.uint8(frame))
                         if image_data.mode != "RGB":
                             image_data = image_data.convert('RGB')
@@ -200,5 +206,6 @@ class VisualDescriptor():
             except Exception as e:
                 log.error(e)
                 log.exception("There was an error reading a frame. Other frames available in sampled_frames.")
-
+            finally:
+                video_reader.close()
             return results
