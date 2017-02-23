@@ -24,9 +24,9 @@ class VisualDescriptor():
 
     def __init__(self, debug=False):
         pycaffe_dir = os.path.dirname(__file__)
-        self.model_def = os.path.join(pycaffe_dir, 'nsfw_model/alexnet.prototxt')
-        self.pretrained_model = os.path.join(pycaffe_dir, 'nsfw_model/alexnet.caffemodel')
-        self.mean_path = os.path.join(pycaffe_dir, 'nsfw_model/mean.binaryproto')
+        self.model_def = os.path.join(pycaffe_dir, 'nsfw_model/googlenet.prototxt')
+        self.pretrained_model = os.path.join(pycaffe_dir, 'nsfw_model/googlenet.caffemodel')
+        self.mean_path = os.path.join(pycaffe_dir, 'nsfw_model/googlenet_mean.binaryproto')
         # Pre-load caffe model.
         self.nsfw_net = caffe.Net(self.model_def,  # pylint: disable=invalid-name
                                   self.pretrained_model, caffe.TEST)
@@ -34,8 +34,8 @@ class VisualDescriptor():
         '''
         Reading mean image, caffe model and its weights
         '''
-        self.image_width = 227
-        self.image_height = 227
+        self.image_width = 224
+        self.image_height = 224
         # Read mean image
         self.mean_blob = caffe_pb2.BlobProto()
         with open(self.mean_path) as f:
