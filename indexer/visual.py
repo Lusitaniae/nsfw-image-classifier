@@ -275,6 +275,8 @@ class VisualDescriptor():
                     result['nsfw'] = result_resnet['nsfw']
                 elif result_googlenet['nsfw'] < 0.2:
                     result['nsfw'] = (0.85 * result_resnet['nsfw'] + 0.15 * result_googlenet['nsfw'])
+                else:
+                    result['nsfw'] = (0.65 * result_resnet['nsfw'] + 0.35 * result_googlenet['nsfw'])
             elif result_googlenet['nsfw'] > 0.8:
                 result['nsfw'] = result_googlenet['nsfw']
             elif result_resnet['sfw'] < 0.2:
@@ -328,6 +330,8 @@ class VisualDescriptor():
                             result['nsfw'] = result_resnet['nsfw']
                         elif result_googlenet['nsfw'] < 0.2:
                             result['nsfw'] = (0.85*result_resnet['nsfw'] + 0.15*result_googlenet['nsfw'])
+                        else:
+                            result['nsfw'] = (0.65 * result_resnet['nsfw'] + 0.35 * result_googlenet['nsfw'])
                     elif result_googlenet['nsfw'] > 0.8:
                         result['nsfw'] = result_googlenet['nsfw']
                     elif result_resnet['sfw'] < 0.2:
