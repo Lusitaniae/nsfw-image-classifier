@@ -25,8 +25,22 @@ def analytics_nsfw_image_worker(self, image_url, thumbnail_url):
                 if len(image_url) <= 10:
                     list_results = []
                     for index, url in enumerate(image_url):
-                        image_data = vd.url2image(thumbnail_url[index])
-                        result = vd.get_tag_image(image_data)
+                        result = dict()
+                        image_data_googlenet = vd.url2image_googlenet(thumbnail_url[index])
+                        image_data_resnet = vd.url2image_resnet(thumbnail_url[index])
+                        result_googlenet = vd.get_tag_image_googlenet(image_data_googlenet)
+                        result_resnet = vd.get_tag_image_resnet(image_data_resnet)
+
+                        if result_resnet['nsfw'] > 0.8:
+                            result['nsfw'] = result_resnet['nsfw']
+                        elif result_googlenet['nsfw'] > 0.8:
+                            result['nsfw'] = result_googlenet['nsfw']
+                        elif result_resnet['sfw'] < 0.2:
+                            result['nsfw'] = result_googlenet['nsfw']
+                        else:
+                            result['nsfw'] = (0.6*result_resnet['nsfw'] + 0.4*result_googlenet['nsfw'])
+                        result['sfw'] = 1 - result['nsfw']
+
                         list_results.append(result)
                     results['response'] = list_results
                     results['status_code'] = 2000
