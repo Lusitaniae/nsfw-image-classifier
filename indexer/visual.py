@@ -271,7 +271,10 @@ class VisualDescriptor():
             result_resnet = self.get_tag_image_resnet(image_data_resnet)
 
             if result_resnet['nsfw'] > 0.8:
-                result['nsfw'] = result_resnet['nsfw']
+                if result_resnet['nsfw'] > 0.9:
+                    result['nsfw'] = result_resnet['nsfw']
+                elif result_googlenet['nsfw'] < 0.2:
+                    result['nsfw'] = (0.8 * result_resnet['nsfw'] + 0.2 * result_googlenet['nsfw'])
             elif result_googlenet['nsfw'] > 0.8:
                 result['nsfw'] = result_googlenet['nsfw']
             elif result_resnet['sfw'] < 0.2:
@@ -321,7 +324,10 @@ class VisualDescriptor():
                     image_data = bytearray(fh_im.read())
                     result_resnet = self.get_tag_image_resnet(image_data)
                     if result_resnet['nsfw'] > 0.8:
-                        result['nsfw'] = result_resnet['nsfw']
+                        if result_resnet['nsfw'] > 0.9:
+                            result['nsfw'] = result_resnet['nsfw']
+                        elif result_googlenet['nsfw'] < 0.2:
+                            result['nsfw'] = (0.8*result_resnet['nsfw'] + 0.2*result_googlenet['nsfw'])
                     elif result_googlenet['nsfw'] > 0.8:
                         result['nsfw'] = result_googlenet['nsfw']
                     elif result_resnet['sfw'] < 0.2:
