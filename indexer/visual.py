@@ -256,7 +256,6 @@ class VisualDescriptor():
 
         return result
 
-
     def index_image_from_url(self, image_url):
         """
         Sample images from a live stream at regular intervals.
@@ -283,9 +282,6 @@ class VisualDescriptor():
             log.exception("There was an error reading a image url")
 
         return result
-
-
-
 
     def index_frames_from_url(self, video_url, delay):
         """
