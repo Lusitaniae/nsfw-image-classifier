@@ -90,7 +90,8 @@ class VisualDescriptor():
         img[:, :, 2] = cv2.equalizeHist(img[:, :, 2])
 
         # Image Resizing
-        img = cv2.resize(img, (self.image_width, self.image_height), interpolation=cv2.INTER_CUBIC)
+        img = cv2.resize(img, (self.image_width_googlenet, self.image_height_googlenet),
+                         interpolation=cv2.INTER_CUBIC)
 
         return img
 
@@ -133,7 +134,7 @@ class VisualDescriptor():
         """
         Resize image. Please use this resize logic for best results instead of the
         caffe, since it was used to generate training dataset
-        :param str data:
+        :param  data:
             The image data
         :param sz tuple:
             The resized image dimensions
@@ -172,7 +173,7 @@ class VisualDescriptor():
             if output_layers is None:
                 output_layers = caffe_net.outputs
 
-            img_data_rs = self.resize_image(pimg, sz=(256, 256))
+            img_data_rs = self.resize_image_resnet(pimg, sz=(256, 256))
             image = caffe.io.load_image(StringIO(img_data_rs))
 
             H, W, _ = image.shape
