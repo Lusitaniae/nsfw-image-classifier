@@ -4,7 +4,7 @@ production:
       host: "10.0.2.142"
       prefix: "production.nsfw_analytics.worker"
   redis_options:
-      redis_host: 'redis://production.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
+      redis_host: 'redis://production-cache.haoefi.0001.usw1.cache.amazonaws.com:6379'
 
 staging:
   statsd:
@@ -12,7 +12,7 @@ staging:
       host: "172.31.13.236"
       prefix: "staging.nsfw_analytics.worker"
   redis_options:
-      redis_host: 'redis://staging.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
+      redis_host: 'redis://ip-172-31-15-245.us-west-1.compute.internal:6379'
 
 
 dev-tunnel:
@@ -21,7 +21,7 @@ dev-tunnel:
       host: "172.31.13.236"
       prefix: "dev-tunnel.nsfw_analytics.worker"
   redis_options:
-      redis_host: 'redis://staging.haoefi.ng.0001.usw1.cache.amazonaws.com:6379'
+      redis_host: 'redis://ip-172-31-15-245.us-west-1.compute.internal:6379'
 
 
 dev:
