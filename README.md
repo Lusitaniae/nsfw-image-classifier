@@ -1,3 +1,4 @@
+[![Datmo Model](https://datmo.io/anands/image-nsfw-classifier/badge.svg)](https://datmo.io/anands/image-nsfw-classifier)
 # Open nsfw model
 This repo contains code for running Not Suitable for Work (NSFW) classification deep neural network Caffe models. Please refer our [blog](https://yahooeng.tumblr.com/post/151148689421/open-sourcing-a-deep-learning-solution-for) post which describes this work and experiments in more detail.
 
